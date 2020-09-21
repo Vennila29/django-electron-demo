@@ -26,7 +26,7 @@ function createWindow () {
     }
     openWindow();
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   //check for auto update
   mainWindow.once('ready-to-show', () => {
