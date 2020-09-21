@@ -1,0 +1,27 @@
+{
+  "name": "django-electron-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Epsi Vennila",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^10.1.2",
+    "electron-builder": "^22.8.0"
+  },
+  "dependencies": {
+    "electron-updater": "^4.3.5"
+  },
+  "build": {
+    "appId": "basilicfly.com",
+    "win": {
+      "target": "nsis"
+    }
+  }
+}
