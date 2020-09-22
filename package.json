@@ -1,12 +1,14 @@
 {
   "name": "django-electron-demo",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Epsi Vennila",
@@ -19,9 +21,18 @@
     "electron-updater": "^4.3.5"
   },
   "build": {
-    "appId": "basilicfly.com",
+    "appId" : "com.bfs.django-electron-demo",
+    "productName" : "django-electron-demo",
+    "copyright" : "CopyRights @2020",
     "win": {
-      "target": "nsis"
-    }
+      "target": "NSIS"
+    },
+    "publish": [
+      "github"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vennila29/django-electron-demo.git"
   }
 }

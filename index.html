@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <meta charset = "UTF-8">
+      <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
       <title>Hello World!</title>
       <style>
          #notification {
@@ -18,48 +18,52 @@
          display: none;
          }
       </style>
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
    </head>
    
    <body>
-      <h1>Hello World!</h1>
-      We are using node <script>document.write(process.versions.node)</script>,
-      Chrome <script>document.write(process.versions.chrome)</script>,
-      and Electron <script>document.write(process.versions.electron)</script>
-      <div id="notification" class="hidden">
-         <p id="message"></p>
-         <button id="close-button" onClick="closeNotification()">
-           Close
-         </button>
-         <button id="restart-button" onClick="restartApp()" class="hidden">
-           Restart
-         </button>
-       </div>
+  <div class="w3-container">
+
+    <h1 style="color:blueviolet">Pingo App - New</h1>
+    <h3>Brand new app</h3>
+
+    <p>
+      Current version: <span id="version"></span>
+    </p>
+
+    <div id="messages" style="color:cyan"></div>
+
+    <div class="w3-light-grey">
+      <div class="w3-blue" style="height:24px;width:0%" id="progressBar"></div>
+    </div>
+
+  </div>
    </body>
 
    <script>
-      const notification = document.getElementById('notification');
-      const message = document.getElementById('message');
-      const restartButton = document.getElementById('restart-button');
-      const { ipcRenderer } = require('electron').ipcRenderer;    
+      
+const { ipcRenderer } = require('electron')
 
-      ipcRenderer.on('update_available', () => {
-         ipcRenderer.removeAllListeners('update_available');
-         message.innerText = 'A new update is available. Downloading now...';
-         notification.classList.remove('hidden');
-      });
+const select = selector => document.querySelector(selector)
 
-      ipcRenderer.on('update_downloaded', () => {
-         ipcRenderer.removeAllListeners('update_downloaded');
-         message.innerText = 'Update Downloaded. It will be installed on restart. Restart now?';
-         restartButton.classList.remove('hidden');
-         notification.classList.remove('hidden');
-      });
+let container = select('#messages')
+let progressBar = select('#progressBar')
+let version = select('#version')
 
-      function closeNotification() {
-         notification.classList.add('hidden');
-      }
-      function restartApp() {
-         ipcRenderer.send('restart_app');
-      }
+ipcRenderer.on('message', (event, text) => {
+
+  let message = document.createElement('div')
+  message.innerHTML = text
+  container.appendChild(message)
+
+})
+
+ipcRenderer.on('version', (event, text) => {
+  version.innerText = text
+})
+
+ipcRenderer.on('download-progress', (event, text) => {
+  progressBar.style.width = `${text}%`
+})
    </script>
 </html>
