@@ -1,6 +1,6 @@
 {
   "name": "django-electron-demo",
-  "version": "1.0.10",
+  "version": "2.0.1",
   "description": "",
   "main": "main.js",
   "scripts": {
