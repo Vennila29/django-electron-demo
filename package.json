@@ -1,6 +1,6 @@
 {
   "name": "django-electron-demo",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "dist": "electron-builder",
     "build": "electron-builder build --win --publish never",
     "deploy": "electron-builder build --win --publish always",
+    "publish": "build --mac --win -p always",
     "release": "build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

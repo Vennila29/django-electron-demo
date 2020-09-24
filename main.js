@@ -5,19 +5,22 @@ let mainWindow;
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 1600,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
     },
   });
+  mainWindow.webContents.openDevTools();
   mainWindow.loadFile('index.html');
+
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
-
-  mainWindow.once('ready-to-show', () => {
+  // console.log("hello")
+  mainWindow.webContents.on('did-finish-load', function() {
     autoUpdater.checkForUpdatesAndNotify();
+    console.log("hello")
   });
 }
 
