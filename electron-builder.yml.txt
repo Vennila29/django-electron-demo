@@ -1,4 +1,0 @@
-appId: com.bfs.django-electron-demo
-publish:
-  provider: github
-  token: 5503e274ec40e3765320e838fdd0afbb671cadee
