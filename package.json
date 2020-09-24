@@ -1,6 +1,6 @@
 {
   "name": "django-electron-demo",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -23,18 +23,15 @@
     "electron-updater": "^4.3.5"
   },
   "build": {
-    "appId": "com.bfs.django-electron-demo",
+    "appId": "com.Vennila29.django-electron-demo",
     "productName": "django-electron-demo",
     "copyright": "CopyRights @2020",
     "win": {
       "target": "NSIS"
-    },
-    "publish": [
-      "github"
-    ]
+    }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Vennila29/django-electron-demo.git"
+    "url": "https://github.com/Vennila29/django-electron-demo.git"
   }
 }

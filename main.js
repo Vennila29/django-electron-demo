@@ -1,73 +1,51 @@
-const { app, BrowserWindow } = require('electron')
-const { autoUpdater } = require("electron-updater")
-const log = require('electron-log');
-autoUpdater.logger = log;
-log.transports.file.level = 'info';
-log.info('App starting...');
-let win
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { autoUpdater } = require('electron-updater');
 
-const dispatch = (data) => {
-  log.info(data);
-  win.webContents.send('message', data)
-}
+let mainWindow;
 
-const createDefaultWindow = () => {
-  win = new BrowserWindow({ width: 1200, height: 600,webPreferences: {
-    nodeIntegration: true
-  } })
-  win.webContents.openDevTools();
-
-  win.on('closed', () => {
-    win = null
-  })
-
-  win.loadFile('index.html')
-
-  return win
+function createWindow () {
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+  mainWindow.loadFile('index.html');
+  mainWindow.on('closed', function () {
+    mainWindow = null;
+  });
 }
 
 app.on('ready', () => {
-  
-  createDefaultWindow()
+  createWindow();
+  mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+});
 
-  win.webContents.on('did-finish-load', () => {
-    dispatch(app.getVersion())
-    console.log(app.getVersion())
-  })
-  autoUpdater.checkForUpdatesAndNotify()
-})
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
-app.on('window-all-closed', () => {
-  app.quit()
-})
+app.on('activate', function () {
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
 
+ipcMain.on('app_version', (event) => {
+  event.sender.send('app_version', { version: app.getVersion() });
+});
 
-autoUpdater.on('checking-for-update', () => {
-  dispatch('Checking for update...')
-})
-
-autoUpdater.on('update-available', (info) => {
-  dispatch('Update available.')
-})
-
-autoUpdater.on('update-not-available', (info) => {
-  dispatch('Update not available.')
-})
-
-autoUpdater.on('error', (err) => {
-  dispatch('Error in auto-updater. ' + err)
-})
-
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
-  dispatch(log_message)
-
-    // win.webContents.send('download-progress', progressObj.percent)
-
-})
-
-autoUpdater.on('update-downloaded', (info) => {
-  dispatch('Update downloaded')
-})
+autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
+});
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
+});
