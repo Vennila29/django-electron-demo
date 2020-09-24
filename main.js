@@ -1,59 +1,67 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const { autoUpdater } = require('electron-updater');
-const log = require('electron-log');
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
-// autoUpdater.logger.transports.file.file = __dirname + 'log.log';
-log.info('App starting...');
+const { app, BrowserWindow } = require('electron')
+const { autoUpdater } = require("electron-updater")
 
-let mainWindow;
-function sendStatusToWindow(text) {
-  log.info(text);
-  mainWindow.webContents.send('message', text);
+let win
+
+const dispatch = (data) => {
+  win.webContents.send('message', data)
 }
-function createWindow () {
-  mainWindow = new BrowserWindow({
-    width: 1600,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-    },
-  });
-  mainWindow.webContents.openDevTools();
-  mainWindow.loadFile('index.html');
 
-  mainWindow.on('closed', function () {
-    mainWindow = null;
-  });
+const createDefaultWindow = () => {
+  win = new BrowserWindow()
 
+  win.on('closed', () => {
+    win = null
+  })
+
+  win.loadFile('index.html')
+
+  return win
 }
+
+app.on('ready', () => {
+  
+  createDefaultWindow()
+
+  autoUpdater.checkForUpdatesAndNotify()
+
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.send('version', app.getVersion())
+  })
+
+})
+
+app.on('window-all-closed', () => {
+  app.quit()
+})
+
 
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+  dispatch('Checking for update...')
 })
-autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available.');
-})
-autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
-})
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error in auto-updater. ' + err);
-})
-autoUpdater.on('download-progress', (progressObj) => {
-  let log_message = "Download speed: " + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-  log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  sendStatusToWindow(log_message);
-})
-autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded');
-});
 
-app.on('ready', function() {
-  createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
-});
-app.on('window-all-closed', () => {
-  app.quit();
-});
+autoUpdater.on('update-available', (info) => {
+  dispatch('Update available.')
+})
+
+autoUpdater.on('update-not-available', (info) => {
+  dispatch('Update not available.')
+})
+
+autoUpdater.on('error', (err) => {
+  dispatch('Error in auto-updater. ' + err)
+})
+
+autoUpdater.on('download-progress', (progressObj) => {
+  // let log_message = "Download speed: " + progressObj.bytesPerSecond
+  // log_message = log_message + ' - Downloaded ' + progressObj.percent + '%'
+  // log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')'
+  // dispatch(log_message)
+
+    win.webContents.send('download-progress', progressObj.percent)
+
+})
+
+autoUpdater.on('update-downloaded', (info) => {
+  dispatch('Update downloaded')
+})
