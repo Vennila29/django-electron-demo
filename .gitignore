@@ -2,3 +2,4 @@ dist
 node_modules/
 icon
 mysite
+electron-builder.yml

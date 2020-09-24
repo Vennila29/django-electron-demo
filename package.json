@@ -1,6 +1,6 @@
 {
   "name": "django-electron-demo",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "dist": "electron-builder",
     "build": "electron-builder build --win --publish never",
     "deploy": "electron-builder build --win --publish always",
-    "publish": "build --win -p always",
+    "publish": "electron-builder build --win -p always",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Epsi Vennila",
@@ -29,11 +29,9 @@
     "win": {
       "target": "NSIS"
     },
-    "publish": [{
-      "provider": "github",
-      "owner": "vennila29",
-      "repo": "django-electron-demo"
-    }]
+    "publish": [
+      "github"
+    ]
   },
   "repository": {
     "type": "git",

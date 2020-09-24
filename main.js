@@ -30,13 +30,11 @@ app.on('ready', () => {
   
   createDefaultWindow()
 
-  autoUpdater.checkForUpdatesAndNotify()
-
   win.webContents.on('did-finish-load', () => {
-    win.webContents.send('version', app.getVersion())
-    console.log("verssion")
+    dispatch(app.getVersion())
+    console.log(app.getVersion())
   })
-
+  autoUpdater.checkForUpdatesAndNotify()
 })
 
 app.on('window-all-closed', () => {
