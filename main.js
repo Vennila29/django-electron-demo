@@ -3,12 +3,13 @@ const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
+// autoUpdater.logger.transports.file.file = __dirname + 'log.log';
 log.info('App starting...');
 
 let mainWindow;
 function sendStatusToWindow(text) {
   log.info(text);
-  win.webContents.send('message', text);
+  mainWindow.webContents.send('message', text);
 }
 function createWindow () {
   mainWindow = new BrowserWindow({
@@ -24,8 +25,7 @@ function createWindow () {
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
-  // console.log("hello")
- 
+
 }
 
 autoUpdater.on('checking-for-update', () => {
