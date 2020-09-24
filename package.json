@@ -1,6 +1,6 @@
 {
   "name": "django-electron-demo",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -28,7 +28,8 @@
     "copyright": "CopyRights @2020",
     "win": {
       "target": "NSIS"
-    }
+    },
+    "publish":["github"]
   },
   "repository": {
     "type": "git",
