@@ -16,7 +16,7 @@ function createWindow () {
     },
   });
   mainWindow.webContents.openDevTools();
-  mainWindow.loadFile('index.html');
+  mainWindow.loadURL('http://127.0.0.1:8000/polls/');
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
