@@ -18,14 +18,12 @@ function createWindow () {
     mainWindow = null;
   });
   // console.log("hello")
-  mainWindow.webContents.on('did-finish-load', function() {
-    autoUpdater.checkForUpdatesAndNotify();
-    console.log("hello")
-  });
+ 
 }
 
 app.on('ready', () => {
   createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', function () {
