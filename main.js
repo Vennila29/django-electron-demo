@@ -1,5 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 let mainWindow;
 
@@ -11,6 +15,7 @@ function createWindow () {
       nodeIntegration: true,
     },
   });
+  mainWindow.webContents.openDevTools();
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {
     mainWindow = null;
@@ -19,9 +24,9 @@ function createWindow () {
 
 app.on('ready', () => {
   createWindow();
-  mainWindow.once('ready-to-show', () => {
+  log.info("checkForAutoUpdatesAndNotify")
     autoUpdater.checkForUpdatesAndNotify();
-  });
+    log.info("checkedForAutoUpdatesAndNotify")
 });
 
 app.on('window-all-closed', function () {
@@ -38,14 +43,18 @@ app.on('activate', function () {
 
 ipcMain.on('app_version', (event) => {
   event.sender.send('app_version', { version: app.getVersion() });
+  log.info("sending app version")
 });
 
 autoUpdater.on('update-available', () => {
   mainWindow.webContents.send('update_available');
+  log.info("update_available")
 });
 autoUpdater.on('update-downloaded', () => {
   mainWindow.webContents.send('update_downloaded');
+  log.info("update_downloaded")
 });
 ipcMain.on('restart_app', () => {
+  log.info("quitAndInstall")
   autoUpdater.quitAndInstall();
 });
