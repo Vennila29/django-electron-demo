@@ -23,7 +23,7 @@ function createWindow () {
       preload : path.join(__dirname,'preload.js'),
     }
   });
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   mainWindow.loadURL('http://127.0.0.1:8000/polls/');
   // mainWindow.loadFile('index.html');
   mainWindow.on('closed', function () {
